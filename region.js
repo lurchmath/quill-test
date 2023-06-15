@@ -1,7 +1,6 @@
 
 // To do list
 // ----------
-//  - draw the path of a region to a given canvas context
 //  - test membership of a point in the region
 
 
@@ -24,9 +23,12 @@
 // | words inside | words after words after words after words after
 // +--------------+
 
+const epsilon = 3 // how many pixels tolerance can two text lines overlap
+
 export class Region {
 
     constructor ( startNode, endNode ) {
+        // store our parameters and ensure they're inside a Quill editor
         this.start = startNode
         this.end = endNode
         this.editor = startNode
@@ -34,16 +36,24 @@ export class Region {
             this.editor = this.editor.parentNode
         if ( !this.editor )
             throw new Error( 'Region endpoints must be in a ql-editor' )
+        // measurements come in absolute viewport measurements, but we'll need
+        // to relativize them in two ways.
+        // 1. the canvas is probably not at (0,0) in the viewport
+        // 2. the editor may be scrolled
+        // so we compute a (left,top) for relativizing all viewport measurements
         const context = this.editor.parentNode.getBoundingClientRect()
         const top = context.top
         const left = context.left
+        // get rects for start and end nodes and see if this region is a rect
         const rect1 = startNode.getBoundingClientRect()
         const rect2 = endNode.getBoundingClientRect()
-        this.isRect = rect2.top < rect1.bottom
-        this.top = Math.min( rect1.top, rect2.top ) - top
-        this.bottom = Math.min( rect1.bottom, rect2.bottom ) - top
+        this.isRect = rect2.top < rect1.bottom - epsilon
+        // compute our (left,top) and (right,bottom) points, relativized as
+        // mentioned above, re: viewport vs. canvas locations
         this.left = rect1.left - left
+        this.top = Math.min( rect1.top, rect2.top ) - top
         this.right = rect2.right - left
+        this.bottom = Math.max( rect1.bottom, rect2.bottom ) - top
         // and in case we are not a rect, store the inset corners, too
         this.innerTop = rect1.bottom - top
         this.innerBottom = rect2.top - top

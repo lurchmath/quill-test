@@ -43,11 +43,11 @@ class Groupers extends Module {
             } )
         } )
 
-        // Debugging spam for during development and testing
-        this.quill.on( 'text-change', ( change, original, source ) => {
-            console.log( 'from this doc: ' + JSON.stringify( original, null, 2 ) )
-            console.log( source + ' applied this delta: ' + JSON.stringify( change, null, 2 ) )
-        } )
+        // // Debugging spam for during development and testing
+        // this.quill.on( 'text-change', ( change, original, source ) => {
+        //     console.log( 'from this doc: ' + JSON.stringify( original, null, 2 ) )
+        //     console.log( source + ' applied this delta: ' + JSON.stringify( change, null, 2 ) )
+        // } )
 
         this.overlay = quill.getModule( 'overlay' )
         this.overlay.draw = context => this.drawGroups( context )

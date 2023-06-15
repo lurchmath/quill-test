@@ -27,6 +27,7 @@ class Overlay extends Module {
         quill.on( 'text-change', () => setTimeout( () => this.redraw(), 0 ) )
         quill.on( 'selection-change', () => this.redraw() )
         this.quill.container.addEventListener( 'mousemove', () => this.redraw() )
+        this.quill.scroll.domNode.addEventListener( 'scroll', () => this.redraw() )
     }
 
     updateSize () {
