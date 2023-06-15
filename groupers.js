@@ -1,91 +1,20 @@
 
 // To do list
 // ----------
-// Create a Group class and move some of the GrouperBlot functionality into it
-//  - construct group from given id
-//  - can cache the groupers and update the cache iff !document.contains( grouper )
-//  - get both groupers
-//  - read and write data
-//  - map a document index to group position data object, including:
-//     * inside or outside the group? fully inside vs. adjacent to a grouper?
-//     * immediately to the left/right of the open/close grouper?
-//  - detect when mouse is inside group (open/close/interior)
-//  - detect when a group spans more than one line in the editor
-//  - get the bounding rectangle for a non-wrapping group
-//  - get the start/end shape info for a wrapping group
-//  - sequence of leaf blots inside the group
-//  - sequence of DOM elements inside the group
+// Construct group from a given id
+// Construct group from a given index
 
 
 // Assumes you've already pulled in Quill from its CDN
 
-const Parchment = Quill.import( 'parchment' ) // maybe same for Delta?
 const Module = Quill.import( 'core/module' )
-const Embed = Quill.import( 'blots/embed' )
-const ScrollBlot = Quill.import( 'blots/scroll' )
+import { GrouperBlot, grouperHTML } from './grouper-blot.js'
+import { Group } from './group.js'
 
-const debugBlot = blot => [
-    `${blot.constructor.blotName} ${blot.text || ''} ${blot.constructor.value ? JSON.stringify(blot.constructor.value(blot.domNode)) : ''}`,
-    ...( blot.children ? blot.children.map( debugBlot ) : [ ] )
-]
-
-const grouperHTML = id =>
-    `<span style="color:white; background:#00a6ed; padding:3px;">${id<0?'[':']'}<sub>${Math.abs(id)}</sub></span>`
-
-// Partially imitating the example here:
-// https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
-class GrouperBlot extends Embed {
-    static blotName = 'grouper'
-    static tagName = 'span'
-    static debug = true // governs how groupers look; see create(), below
-
-    // value is of the form { id : integer } (-3 for left grouper, +3 for corresponding right grouper)
-    static create ( value ) {
-        const node = super.create( value )
-        node.setAttribute( 'data-group-id', value.id )
-        if ( GrouperBlot.debug ) { // obviously this is for debugging/development only; turn this off later
-            const symbol = value.id < 0 ? '[' : ']'
-            // node.appendChild( node.ownerDocument.createTextNode( symbol + Math.abs( value.id ) + symbol ) )
-            const show = node.ownerDocument.createElement( 'span' )
-            node.appendChild( show )
-            show.outerHTML = grouperHTML( value.id )
-        } // end of debugging stuff
-        return node
-    }
-    static value ( element ) { return element.dataset }
-    length () { return 1 }
-
-    deleteAt ( index, length ) {
-        if ( this.beingDeleted ) return
-        this.beingDeleted = true
-        const partner = this.partner() // in case deleting this would mess up computing the partner...
-        super.deleteAt( index, length ) // ...we chose to do that first.
-        if ( partner ) partner.deleteAt( 0, 1 )
-    }
-
-    data () { return GrouperBlot.value( this.domNode ) }
-    id () { return Math.abs( this.data().groupId ) }
-
-    topLevelAncestor () {
-        for ( let walk = this ; walk ; walk = walk.parent )
-            if ( walk instanceof ScrollBlot ) return walk
-    }
-    partner () {
-        const myId = this.id()
-        const doc = this.topLevelAncestor()
-        return doc.descendants( GrouperBlot ).find( g => g != this && g.id() == myId )
-    }
-
-    isOpen () { return this.data().groupId < 0 }
-    isClosed () { return !this.isOpen() }
-    getOpen () { return this.isOpen() ? this : this.partner() }
-    getClose () { return this.isOpen() ? this.partner() : this }
-    
-    get groupData () { return this.getClose().domNode.dataset }
-}
-
-Quill.register( GrouperBlot )
-
+// const debugBlot = blot => [
+//     `${blot.constructor.blotName} ${blot.text || ''} ${blot.constructor.value ? JSON.stringify(blot.constructor.value(blot.domNode)) : ''}`,
+//     ...( blot.children ? blot.children.map( debugBlot ) : [ ] )
+// ]
 const addToolbarButton = ( quill, html, handler ) => {
     const toolbar = quill.getModule( 'toolbar' ).container
     const button = toolbar.ownerDocument.createElement( 'button' )
@@ -107,24 +36,44 @@ class Groupers extends Module {
 
         addToolbarButton( this.quill, `<nobr>${grouperHTML(-1)}${grouperHTML(1)}</nobr>`,
             _ => this.wrapSelection() )
+
         addToolbarButton( this.quill, 'Debug', _ => {
-            const selection = this.quill.getSelection()
-            console.log( `Groups around index ${selection.index}: ${this.thoseOpenAt( selection.index )}` )
+            // const selection = this.quill.getSelection()
+            // console.log( `Group around index ${selection.index}:`,
+            //     this.groupAroundIndex( selection.index ) )
+            this.allGroups().forEach( ( g, i ) => {
+                console.log( `${i}. Group w/id=${g.id} @ ${JSON.stringify(g.indices())}` )
+                console.log( g )
+                console.log( 'Parent:', g.parent() )
+                console.log( 'Previous:', g.previous() )
+                console.log( 'Next:', g.next() )
+                console.log( 'First child:', g.firstChild() )
+                console.log( 'Children:', g.children() )
+            } )
         } )
 
+        // Debugging spam for during development and testing
         this.quill.on( 'text-change', ( change, original, source ) => {
             console.log( 'from this doc: ' + JSON.stringify( original, null, 2 ) )
             console.log( source + ' applied this delta: ' + JSON.stringify( change, null, 2 ) )
         } )
     }
 
-    all () { return this.quill.scroll.descendants( GrouperBlot ) }
+    allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
+    groupersSatisfying ( predicate ) { // predicate maps grouper, index pair to bool
+        return this.allGroupers().filter(
+            g => predicate( g, this.quill.getIndex( g ) ) )
+    }
 
-    pairWithId ( id ) { return this.all().filter( g => g.id() == id ) }
+    allGroups () {
+        return this.groupersSatisfying( g => g.isOpen() ).map( g => new Group( g ) )
+    }
+
+    pairWithId ( id ) { return this.allGroupers().filter( g => g.id() == id ) }
 
     thoseOpenAt ( index ) {
         const result = [ ]
-        for ( let grouper of this.all() ) {
+        for ( let grouper of this.allGroupers() ) {
             if ( grouper.offset( this.scroll ) >= index ) break
             if ( grouper.isOpen() )
                 result.push( grouper.id() )
@@ -135,7 +84,7 @@ class Groupers extends Module {
     }
 
     nextAvailableId () {
-        const usedIds = this.all().map( b => b.id() )
+        const usedIds = this.allGroupers().map( b => b.id() )
         let possibleAnswer = 1
         while ( usedIds.includes( possibleAnswer ) ) possibleAnswer++
         return possibleAnswer
@@ -152,6 +101,37 @@ class Groupers extends Module {
         this.quill.insertEmbed( start, 'grouper', { id : -id }, Quill.sources.USER )
         this.quill.insertEmbed( start + 1 + length, 'grouper', { id : id }, Quill.sources.USER )
         this.quill.setSelection( start + 1, length )
+    }
+
+    groupWithId ( id ) {
+        const groupers = this.pairWithId( id )
+        if ( groupers.length > 0 )
+            return new Group( ...groupers )
+    }
+
+    // what is the innermost group containing this index?
+    // (i.e., the one for the most recent open grouper before this index)
+    groupAroundIndex ( index ) {
+        const opens = this.groupersSatisfying(
+            ( g, i ) => g.isOpen() && i < index )
+        if ( opens.length > 0 )
+            return opens[opens.length - 1].group()
+    }
+    // what is the outermost group before this index?
+    // (i.e., the one for the most recent close grouper before this index)
+    groupBeforeIndex ( index ) {
+        const closes = this.groupersSatisfying(
+            ( g, i ) => g.isClose() && i < index )
+        if ( closes.length > 0 )
+            return closes[closes.length - 1].group()
+    }
+    // what is the outermost group at or after this index?
+    // (i.e., the one for the next open grouper at or after this index)
+    groupAtOrAfterIndex ( index ) {
+        const opens = this.groupersSatisfying(
+            ( g, i ) => g.isOpen() && i >= index )
+        if ( opens.length > 0 )
+            return opens[0].group()
     }
 
 }
