@@ -24,6 +24,8 @@ const debugBlot = blot => [
 const grouperHTML = id =>
     `<span style="color:white; background:#00a6ed; padding:3px;">${id<0?'[':']'}<sub>${Math.abs(id)}</sub></span>`
 
+// Partially imitating the example here:
+// https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 class GrouperBlot extends Embed {
     static blotName = 'grouper'
     static tagName = 'span'
@@ -87,6 +89,8 @@ const addToolbarButton = ( quill, html, handler ) => {
     button.addEventListener( 'click', handler )
 }
 
+// Partially imitating the example here:
+// https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-module.ts#L22
 class Groupers extends Module {
 
     constructor ( quill, options ) {
