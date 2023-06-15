@@ -65,7 +65,7 @@ class Groupers extends Module {
 
     pairWithId ( id ) { return this.allGroupers().filter( g => g.id() == id ) }
 
-    thoseOpenAt ( index ) {
+    indicesOpenAt ( index ) {
         const result = [ ]
         for ( let grouper of this.allGroupers() ) {
             if ( grouper.offset( this.scroll ) >= index ) break
@@ -89,7 +89,7 @@ class Groupers extends Module {
         if ( !selection ) return
         const start = selection.index
         const length = selection.length
-        if ( `${this.thoseOpenAt(start)}` != `${this.thoseOpenAt(start+length)}` ) return
+        if ( `${this.indicesOpenAt(start)}` != `${this.indicesOpenAt(start+length)}` ) return
         const id = this.nextAvailableId()
         // More info on next two lines: https://quilljs.com/docs/api/#insertembed
         this.quill.insertEmbed( start, 'grouper', { id : -id }, Quill.sources.USER )
@@ -106,10 +106,9 @@ class Groupers extends Module {
     // what is the innermost group containing this index?
     // (i.e., the one for the most recent open grouper before this index)
     groupAroundIndex ( index ) {
-        const opens = this.groupersSatisfying(
-            ( g, i ) => g.isOpen() && i < index )
-        if ( opens.length > 0 )
-            return opens[opens.length - 1].group()
+        const openIndices = this.indicesOpenAt( index )
+        if ( openIndices.length > 0 )
+            return this.groupWithId( openIndices[openIndices.length - 1] )
     }
     // what is the outermost group before this index?
     // (i.e., the one for the most recent close grouper before this index)
