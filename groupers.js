@@ -51,6 +51,9 @@ class Groupers extends Module {
 
         this.overlay = quill.getModule( 'overlay' )
         this.overlay.draw = context => this.drawGroups( context )
+        this.lastMousePos = null
+        this.quill.container.addEventListener( 'mousemove', event =>
+            this.lastMousePos = event )
     }
 
     allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
@@ -128,10 +131,23 @@ class Groupers extends Module {
     }
 
     drawGroups ( context ) {
-        context.strokeStyle = '#ff0000'
+        const offset = this.quill.container.getBoundingClientRect()
+        const mouseX = this.lastMousePos ? this.lastMousePos.clientX - offset.left : -1
+        const mouseY = this.lastMousePos ? this.lastMousePos.clientY - offset.top : -1
+        const selection = this.quill.getSelection()
+        const innerGroup = selection ? this.groupAroundIndex( selection.index ) : null
         this.allGroups().forEach( group => {
-            group.region().drawPath( context )
-            context.stroke()
+            const region = group.region()
+            if ( region.contains( mouseX, mouseY ) ) {
+                region.drawCorners( context )
+                context.fillStyle = '#ff0000'
+                context.fill()
+            }
+            if ( innerGroup && innerGroup.equals( group ) ) {
+                region.drawPath( context )
+                context.strokeStyle = '#ff0000'
+                context.stroke()
+            }
         } )
     }
 

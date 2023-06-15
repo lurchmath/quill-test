@@ -1,9 +1,4 @@
 
-// To do list
-// ----------
-//  - test membership of a point in the region
-
-
 // A region is an on-screen shape that includes two DOM Nodes, a start and an
 // end, which must appear in that order in the document.  If the two nodes are
 // on the same line of text on screen now, then the region is a rectangle, the
@@ -24,6 +19,10 @@
 // +--------------+
 
 const epsilon = 3 // how many pixels tolerance can two text lines overlap
+
+const pointInRect = ( x, y, left, top, right, bottom ) => {
+    return left <= x && x <= right && top <= y && y <= bottom
+}
 
 export class Region {
 
@@ -97,6 +96,31 @@ export class Region {
             context.lineTo( this.left, this.innerTop )
             context.lineTo( this.left, this.top )
             context.closePath()
+        }
+    }
+
+    drawCorners ( context, radius=10 ) {
+        context.beginPath()
+        context.moveTo( this.left, this.top )
+        context.lineTo( this.left + radius, this.top )
+        context.lineTo( this.left, this.top + radius )
+        context.moveTo( this.right, this.bottom )
+        context.lineTo( this.right - radius, this.bottom )
+        context.lineTo( this.right, this.bottom - radius )
+        context.closePath()
+    }
+
+    // x and y are given relative to the top left corner of the canvas
+    // (which is the same thing as the top left corner of the ql-container)
+    contains ( x, y ) {
+        if ( this.isRect ) {
+            return pointInRect( x, y, this.left, this.top, this.right, this.bottom )
+        } else {
+            const min = this.minLeft()
+            const max = this.maxRight()
+            return pointInRect( x, y, min, this.top, max, this.bottom )
+                && !pointInRect( x, y, min, this.top, this.left-1, this.innerTop-1 )
+                && !pointInRect( x, y, this.right+1, this.innerBottom+1, max, this.bottom )
         }
     }
 

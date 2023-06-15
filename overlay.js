@@ -1,11 +1,7 @@
 
-// To do list
-// ----------
-// Create a "corners" highlight path that you can stroke/fill as needed
-// Use some highlight style when the cursor is inside a group
-// Use another highlight style when cursor is adjacent to the group but outside
-// Use another highlight style when mouse passes over the group
-// Pop up a tooltip when highlighting
+// Will eventually want this feature, maybe of this module, maybe of the
+// groupers module:
+//  - Pop up a tooltip for a highlighted group
 
 
 // Assumes you've already pulled in Quill from its CDN

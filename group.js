@@ -1,7 +1,5 @@
 
-// To do list
-// ----------
-//  - detect when mouse is inside group (open/close/interior)
+// May eventually need these features of the Group class:
 //  - sequence of leaf blots inside the group
 //  - sequence of DOM elements inside the group
 
