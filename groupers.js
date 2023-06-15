@@ -1,12 +1,20 @@
 
 // To do list
 // ----------
-// Create transparent overlay canvas on which you can draw anything
-// Create generic tool for overlaying many kinds of highlighting (solid, border, corners, etc.)
-// Use that tool to highlight in one way when cursor is inside
-// Use that tool to highlight in another way when cursor is adjacent
-// Use that tool to highlight in another way when mouse passes over
-// Pop up a tooltip when highlighting
+// Create a Group class and move some of the GrouperBlot functionality into it
+//  - construct group from given id
+//  - can cache the groupers and update the cache iff !document.contains( grouper )
+//  - get both groupers
+//  - read and write data
+//  - map a document index to group position data object, including:
+//     * inside or outside the group? fully inside vs. adjacent to a grouper?
+//     * immediately to the left/right of the open/close grouper?
+//  - detect when mouse is inside group (open/close/interior)
+//  - detect when a group spans more than one line in the editor
+//  - get the bounding rectangle for a non-wrapping group
+//  - get the start/end shape info for a wrapping group
+//  - sequence of leaf blots inside the group
+//  - sequence of DOM elements inside the group
 
 
 // Assumes you've already pulled in Quill from its CDN

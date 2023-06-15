@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -5,21 +6,28 @@
             #editor {
                 height : 200px;
             }
+            #container {
+                position : relative;
+            }
         </style>
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <script src="overlay.js" type="module"></script>
         <script src="groupers.js" type="module"></script>
         <script>
             window.addEventListener( 'load', () => {
                 new Quill( '#editor', {
                     theme : 'snow',
                     modules : {
-                        'groupers' : { }
+                        'groupers' : { },
+                        'overlay' : { }
                     }
                 } )
             } )
         </script>
     </head>
     <body>
-        <div id="editor">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</div>
+        <div id="container">
+            <div id="editor">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</div>
+        </div>
     </body>
 </html>
