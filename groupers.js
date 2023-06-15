@@ -71,7 +71,7 @@ class Groupers extends Module {
     indicesOpenAt ( index ) {
         const result = [ ]
         for ( let grouper of this.allGroupers() ) {
-            if ( grouper.offset( this.scroll ) >= index ) break
+            if ( this.quill.getIndex( grouper ) >= index ) break
             if ( grouper.isOpen() )
                 result.push( grouper.id() )
             else
