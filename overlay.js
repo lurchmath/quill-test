@@ -47,23 +47,7 @@ class Overlay extends Module {
     }
     
     draw ( context ) {
-        // This function does nothing, as a default.
-        // Here's an example of the kind of thing I did just as an experiment once:
-
-        // const radius = 15
-        // context.fillStyle = '#00a6ed'
-        // context.beginPath()
-        // context.arc( 0, 0, radius, 0, 2 * Math.PI )
-        // context.fill()
-        // context.beginPath()
-        // context.arc( 0, this.canvas.height, radius, 0, 2 * Math.PI )
-        // context.fill()
-        // context.beginPath()
-        // context.arc( this.canvas.width, 0, radius, 0, 2 * Math.PI )
-        // context.fill()
-        // context.beginPath()
-        // context.arc( this.canvas.width, this.canvas.height, radius, 0, 2 * Math.PI )
-        // context.fill()
+        // pure virtual function; replace with desired behavior
     }
 
 }
