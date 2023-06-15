@@ -131,7 +131,7 @@ class Groupers extends Module {
     drawGroups ( context ) {
         context.strokeStyle = '#ff0000'
         this.allGroups().forEach( group => {
-            group.region().tracePath( context )
+            group.region().drawPath( context )
             context.stroke()
         } )
     }

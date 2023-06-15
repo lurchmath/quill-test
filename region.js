@@ -44,6 +44,9 @@ export class Region {
         this.bottom = Math.min( rect1.bottom, rect2.bottom ) - top
         this.left = rect1.left - left
         this.right = rect2.right - left
+        // and in case we are not a rect, store the inset corners, too
+        this.innerTop = rect1.bottom - top
+        this.innerBottom = rect2.top - top
     }
 
     toString () {
@@ -63,15 +66,28 @@ export class Region {
              - styles.get( 'padding-right' ).value
     }
 
-    tracePath ( context ) {
-        const radius = 15
-        context.beginPath()
-        context.moveTo( this.left + radius, this.top )
-        context.lineTo( this.left, this.top )
-        context.lineTo( this.left, this.top + radius)
-        context.moveTo( this.right - radius, this.bottom )
-        context.lineTo( this.right, this.bottom )
-        context.lineTo( this.right, this.bottom - radius)
+    drawPath ( context ) {
+        if ( this.isRect ) {
+            const width = this.right - this.left
+            const height = this.bottom - this.top
+            context.beginPath()
+            context.rect( this.left, this.top, width, height )
+            context.closePath()
+        } else {
+            const min = this.minLeft()
+            const max = this.maxRight()
+            context.beginPath()
+            context.moveTo( this.left, this.top )
+            context.lineTo( max, this.top )
+            context.lineTo( max, this.innerBottom )
+            context.lineTo( this.right, this.innerBottom )
+            context.lineTo( this.right, this.bottom )
+            context.lineTo( min, this.bottom )
+            context.lineTo( min, this.innerTop )
+            context.lineTo( this.left, this.innerTop )
+            context.lineTo( this.left, this.top )
+            context.closePath()
+        }
     }
 
 }
