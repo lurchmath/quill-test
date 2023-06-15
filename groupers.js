@@ -1,10 +1,4 @@
 
-// To do list
-// ----------
-// Construct group from a given id
-// Construct group from a given index
-
-
 // Assumes you've already pulled in Quill from its CDN
 
 const Module = Quill.import( 'core/module' )
@@ -38,17 +32,14 @@ class Groupers extends Module {
             _ => this.wrapSelection() )
 
         addToolbarButton( this.quill, 'Debug', _ => {
-            // const selection = this.quill.getSelection()
-            // console.log( `Group around index ${selection.index}:`,
-            //     this.groupAroundIndex( selection.index ) )
             this.allGroups().forEach( ( g, i ) => {
-                console.log( `${i}. Group w/id=${g.id} @ ${JSON.stringify(g.indices())}` )
-                console.log( g )
-                console.log( 'Parent:', g.parent() )
-                console.log( 'Previous:', g.previous() )
-                console.log( 'Next:', g.next() )
-                console.log( 'First child:', g.firstChild() )
-                console.log( 'Children:', g.children() )
+                console.log( `${i}. ${g}` )
+                console.log( `\t^  ${g.parent()}` )
+                console.log( `\t<  ${g.previous()}` )
+                console.log( `\t>  ${g.next()}` )
+                console.log( `\tv  ${g.firstChild()}` )
+                console.log( `\tvv ${g.children()}` )
+                console.log( `\t[] ${g.region()}` )
             } )
         } )
 
@@ -57,6 +48,9 @@ class Groupers extends Module {
             console.log( 'from this doc: ' + JSON.stringify( original, null, 2 ) )
             console.log( source + ' applied this delta: ' + JSON.stringify( change, null, 2 ) )
         } )
+
+        this.overlay = quill.getModule( 'overlay' )
+        this.overlay.draw = context => this.drawGroups( context )
     }
 
     allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
@@ -132,6 +126,14 @@ class Groupers extends Module {
             ( g, i ) => g.isOpen() && i >= index )
         if ( opens.length > 0 )
             return opens[0].group()
+    }
+
+    drawGroups ( context ) {
+        context.strokeStyle = '#ff0000'
+        this.allGroups().forEach( group => {
+            group.region().tracePath( context )
+            context.stroke()
+        } )
     }
 
 }

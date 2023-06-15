@@ -1,14 +1,12 @@
 
 // To do list
 // ----------
-// Create a class for representing a group's on-screen area; see also
-// the Quill.getBounds() function.
 //  - detect when mouse is inside group (open/close/interior)
-//  - detect when a group spans more than one line in the editor
-//  - get the bounding rectangle for a non-wrapping group
-//  - get the start/end shape info for a wrapping group
 //  - sequence of leaf blots inside the group
 //  - sequence of DOM elements inside the group
+
+
+import { Region } from './region.js'
 
 export class Group {
 
@@ -89,5 +87,9 @@ export class Group {
         }
         return result
     }
+
+    region () { return new Region( this.open.domNode, this.close.domNode ) }
+
+    toString () { return `Group(id=${this.id},${JSON.stringify(this.indices())})` }
 
 }
