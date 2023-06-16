@@ -36,10 +36,8 @@ export class Region {
         if ( !this.editor )
             throw new Error( 'Region endpoints must be in a ql-editor' )
         // measurements come in absolute viewport measurements, but we'll need
-        // to relativize them in two ways.
-        // 1. the canvas is probably not at (0,0) in the viewport
-        // 2. the editor may be scrolled
-        // so we compute a (left,top) for relativizing all viewport measurements
+        // to relativize them because the canvas is probably not at (0,0) in the
+        // view.  So we compute a (left,top) for relativizing all measurements.
         const context = this.editor.parentNode.getBoundingClientRect()
         const top = context.top
         const left = context.left
