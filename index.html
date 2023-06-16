@@ -32,7 +32,7 @@
             ]
 
             window.addEventListener( 'load', () => {
-                new Quill( '#editor', {
+                window.quill = new Quill( '#editor', {
                     modules : {
                         toolbar : toolbarOptions,
                         overlay : true,
