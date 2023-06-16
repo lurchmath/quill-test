@@ -11,7 +11,7 @@ export class Group {
     constructor ( grouper ) {
         this.open = grouper.getOpen()
         this.close = grouper.getClose()
-        this.id = this.close.id()
+        this.id = this.close.id
         this.quill = this.open.quill
         this.module = this.quill.getModule( 'groupers' )
     }

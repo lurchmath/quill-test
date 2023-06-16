@@ -8,9 +8,10 @@ import { Group } from './group.js'
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 export class GrouperBlot extends Embed {
 
-    // constructor ( node, value ) {
-    //     super( node, value )
-    // }
+    constructor ( node, value ) {
+        super( node, value )
+        this.id = value.id
+    }
 
     static blotName = 'grouper'
     static tagName = 'span'
@@ -40,20 +41,19 @@ export class GrouperBlot extends Embed {
     }
 
     data () { return GrouperBlot.value( this.domNode ) }
-    id () { return Math.abs( this.data().groupId ) }
 
     partner () {
-        if ( this._partner ) return this._partner
-        const myId = this.id()
-        const result = this.scroll.descendants( GrouperBlot ).find(
-            g => g != this && g.id() == myId )
-        if ( result ) {
-            this._partner = result
-            result._partner = this
+        if ( !this._partner ) {
+            const result = this.scroll.descendants( GrouperBlot ).find(
+                g => g.id == -this.id )
+            if ( result ) {
+                this._partner = result
+                result._partner = this
+            }
         }
-        return result
+        return this._partner
     }
-    isOpen () { return this.data().groupId < 0 }
+    isOpen () { return this.id < 0 }
     isClose () { return !this.isOpen() }
     getOpen () { return this.isOpen() ? this : this.partner() }
     getClose () { return this.isOpen() ? this.partner() : this }

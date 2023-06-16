@@ -5,14 +5,13 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 
- 1. Store my id during construction time so I don't have to look it up in a DOM
-    node later.
  1. Remove `groupData()` since the only user of it is the Group itself, which
     can just access the close node's dataset directly.
  1. Replace the `quill()` function with just computing `.quill` directly in the
     constructor.
  1. Add a method for changing its HTML representation.  This way you can make
     groups visible/invisible at runtime for debugging/feedback/etc.
+ 1. Rename this module and the class to just `Grouper` instead of `GrouperBlot`.
  1. Document all members.
 
 # `Group`

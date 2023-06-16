@@ -88,7 +88,7 @@ class Groupers extends Module {
         return this.findAll( g => g.isOpen() ).map( g => new Group( g ) )
     }
 
-    pairWithId ( id ) { return this.findAll( g => g.id() == id ) }
+    pairWithId ( id ) { return this.findAll( g => g.id == id ) }
     groupWithId ( id ) {
         const groupers = this.pairWithId( id )
         if ( groupers.length > 0 )
@@ -100,7 +100,7 @@ class Groupers extends Module {
         for ( let grouper of this.allGroupers() ) {
             if ( this.quill.getIndex( grouper ) >= index ) break
             if ( grouper.isOpen() )
-                result.push( grouper.id() )
+                result.push( grouper.id )
             else
                 result.pop()
         }
@@ -108,7 +108,7 @@ class Groupers extends Module {
     }
 
     nextAvailableId () {
-        const usedIds = this.allGroupers().map( b => b.id() )
+        const usedIds = this.allGroupers().map( g => g.id )
         let possibleAnswer = 1
         while ( usedIds.includes( possibleAnswer ) ) possibleAnswer++
         return possibleAnswer
