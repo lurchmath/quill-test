@@ -45,11 +45,16 @@ export class GrouperBlot extends Embed {
     id () { return Math.abs( this.data().groupId ) }
 
     partner () {
+        if ( this._partner ) return this._partner
         const myId = this.id()
-        return this.scroll.descendants( GrouperBlot ).find(
+        const result = this.scroll.descendants( GrouperBlot ).find(
             g => g != this && g.id() == myId )
+        if ( result ) {
+            this._partner = result
+            result._partner = this
+        }
+        return result
     }
-
     isOpen () { return this.data().groupId < 0 }
     isClose () { return !this.isOpen() }
     getOpen () { return this.isOpen() ? this : this.partner() }
