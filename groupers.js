@@ -67,16 +67,16 @@ class Groupers extends Module {
     }
 
     allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
-    groupersSatisfying ( predicate ) { // predicate maps grouper, index pair to bool
+    findAll ( predicate ) { // predicate maps grouper, index pair to bool
         return this.allGroupers().filter(
             g => predicate( g, this.quill.getIndex( g ) ) )
     }
-    firstGrouperSatisfying ( predicate ) {
+    find ( predicate ) {
         const all = this.allGroupers()
         for ( let i = 0 ; i < all.length ; i++ )
             if ( predicate( all[i], i ) ) return all[i]
     }
-    lastGrouperSatisfying ( predicate ) {
+    findLast ( predicate ) {
         const all = this.allGroupers()
         let result = undefined
         for ( let i = 0 ; i < all.length ; i++ )
@@ -85,17 +85,17 @@ class Groupers extends Module {
     }
 
     allGroups () {
-        return this.groupersSatisfying( g => g.isOpen() ).map( g => new Group( g ) )
+        return this.findAll( g => g.isOpen() ).map( g => new Group( g ) )
     }
 
-    pairWithId ( id ) { return this.groupersSatisfying( g => g.id() == id ) }
+    pairWithId ( id ) { return this.findAll( g => g.id() == id ) }
     groupWithId ( id ) {
         const groupers = this.pairWithId( id )
         if ( groupers.length > 0 )
             return new Group( ...groupers )
     }
 
-    indicesOpenAt ( index ) {
+    idsOpenAt ( index ) {
         const result = [ ]
         for ( let grouper of this.allGroupers() ) {
             if ( this.quill.getIndex( grouper ) >= index ) break
@@ -119,7 +119,7 @@ class Groupers extends Module {
         if ( !selection ) return
         const start = selection.index
         const length = selection.length
-        if ( `${this.indicesOpenAt(start)}` != `${this.indicesOpenAt(start+length)}` ) return
+        if ( `${this.idsOpenAt(start)}` != `${this.idsOpenAt(start+length)}` ) return
         const id = this.nextAvailableId()
         // More info on next two lines: https://quilljs.com/docs/api/#insertembed
         this.quill.insertEmbed( start, 'grouper', { id : -id }, source )
@@ -127,25 +127,23 @@ class Groupers extends Module {
         this.quill.setSelection( start + 1, length )
     }
 
-    // what is the innermost group containing this index?
+    // what is the innermost group containing the given index?
     // (i.e., the one for the most recent open grouper before this index)
     groupAround ( index ) {
-        const openIndices = this.indicesOpenAt( index )
-        if ( openIndices.length > 0 )
-            return this.groupWithId( openIndices[openIndices.length - 1] )
+        const openIds = this.idsOpenAt( index )
+        if ( openIds.length > 0 )
+            return this.groupWithId( openIds[openIds.length - 1] )
     }
-    // what is the outermost group before this index?
+    // what is the outermost group before the given index?
     // (i.e., the one for the most recent close grouper before this index)
     groupBefore ( index ) {
-        const close = this.lastGrouperSatisfying(
-            ( g, i ) => g.isClose() && i < index )
+        const close = this.findLast( ( g, i ) => g.isClose() && i < index )
         if ( close ) return close.group()
     }
-    // what is the outermost group at or after this index?
+    // what is the outermost group at or after the given index?
     // (i.e., the one for the next open grouper at or after this index)
     groupAtOrAfter ( index ) {
-        const open = this.firstGrouperSatisfying(
-            ( g, i ) => g.isOpen() && i >= index )
+        const open = this.find( ( g, i ) => g.isOpen() && i >= index )
         if ( open ) return open.group()
     }
 
