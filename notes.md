@@ -3,10 +3,6 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `GrouperBlot`
-
- 1. Document all members.
-
 # `Group`
 
  1. Add methods for getting the internals of a group:
