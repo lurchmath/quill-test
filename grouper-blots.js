@@ -4,6 +4,18 @@
 const Embed = Quill.import( 'blots/embed' )
 import { Group } from './group.js'
 
+const appendHTML = ( node, html ) => {
+    const wrapper = node.ownerDocument.createElement( 'span' )
+    wrapper.classList.add( 'suffix-wrapper' )
+    wrapper.innerHTML = html
+    node.appendChild( wrapper )
+}
+const changeSuffix = ( node, html ) => {
+    const suffixes = node.getElementsByClassName( 'suffix-wrapper' )
+    if ( suffixes.length == 0 ) return
+    suffixes[0].innerHTML = html
+}
+
 // Partially imitating the example here:
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 export class Grouper extends Embed {
@@ -16,22 +28,20 @@ export class Grouper extends Embed {
     // value is of the form { id : integer } (-3 for left grouper, +3 for corresponding right grouper)
     static create ( value ) {
         const node = super.create( value )
-        node.setAttribute( 'data-group-id', value.id )
-        if ( Grouper.idToHtml ) { // so they can clear it out by assigning null
-            const show = node.ownerDocument.createElement( 'span' )
-            node.appendChild( show )
-            show.outerHTML = Grouper.idToHtml( value.id )
-        } // end of debugging stuff
+        node.setAttribute( 'data-id', value.id )
+        if ( Grouper.idToHtml )
+            appendHTML( node, Grouper.idToHtml( value.id ) )
         return node
     }
+    setHTML ( html ) { changeSuffix( this.domNode, html ) }
     static value ( element ) { return element.dataset }
     data () { return Grouper.value( this.domNode ) }
     
     constructor ( node, value ) {
         super( node, value )
         this.id = value.id
-    }    
-
+    }
+    
     partner () {
         if ( !this._partner ) {
             const result = this.scroll.descendants( Grouper ).find( g => g.id == -this.id )

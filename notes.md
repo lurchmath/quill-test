@@ -5,8 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 
- 1. Add a method for changing its HTML representation.  This way you can make
-    groups visible/invisible at runtime for debugging/feedback/etc.
  1. Document all members.
 
 # `Group`
