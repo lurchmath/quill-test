@@ -11,6 +11,10 @@ export const grouperHTML = id =>
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 export class GrouperBlot extends Embed {
 
+    // constructor ( node, value ) {
+    //     super( node, value )
+    // }
+
     static blotName = 'grouper'
     static tagName = 'span'
     static debug = true // governs how groupers look; see create(), below
