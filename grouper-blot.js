@@ -58,7 +58,6 @@ export class GrouperBlot extends Embed {
     getOpen () { return this.isOpen() ? this : this.partner() }
     getClose () { return this.isOpen() ? this.partner() : this }
     
-    get groupData () { return this.getClose().domNode.dataset }
     get quill () { return Quill.find( this.scroll.domNode.parentNode ) }
 
     group () { return new Group( this ) }

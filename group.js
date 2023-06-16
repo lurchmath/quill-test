@@ -16,8 +16,8 @@ export class Group {
         this.module = this.quill.getModule( 'groupers' )
     }
 
-    get ( key ) { return this.close.groupData[key] }
-    set ( key, value ) { return this.close.groupData[key] = value }
+    get ( key ) { return this.close.dataset[key] }
+    set ( key, value ) { return this.close.dataset[key] = value }
 
     indices () {
         const openIndex = this.quill.getIndex( this.open )

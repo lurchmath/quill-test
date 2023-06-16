@@ -5,8 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 
- 1. Remove `groupData()` since the only user of it is the Group itself, which
-    can just access the close node's dataset directly.
  1. Replace the `quill()` function with just computing `.quill` directly in the
     constructor.
  1. Add a method for changing its HTML representation.  This way you can make
