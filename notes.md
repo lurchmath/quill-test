@@ -1,10 +1,7 @@
 
 # General
 
- 1. Figure out how to add menus, submenus, etc.
- 1. Figure out how to connect commands to keyboard shortcuts.
- 1. Figure out the appropriate way to add toolbar buttons, rather than the
-    hacked-together way you're doing it now.
+Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 

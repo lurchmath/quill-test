@@ -16,11 +16,19 @@ const getToolbarGroup = quill => {
     return result
 }
 const addToolbarButton = ( quill, html, handler ) => {
-    const toolbar = quill.getModule( 'toolbar' ).container
-    const button = toolbar.ownerDocument.createElement( 'button' )
+    const zone = getToolbarGroup( quill )
+    const button = zone.ownerDocument.createElement( 'button' )
     button.innerHTML = html
     button.addEventListener( 'click', handler )
-    getToolbarGroup( quill ).appendChild( button )
+    zone.appendChild( button )
+}
+// This does not match perfectly with the existing Quill style, but it functions:
+const addToolbarMenu = ( quill, list, handler ) => {
+    const zone = getToolbarGroup( quill )
+    const select = zone.ownerDocument.createElement( 'select' )
+    select.innerHTML = list.map( x => `<option value="${x}">${x}</option>` ).join( '' )
+    select.addEventListener( 'change', handler ) // event.target will be the select
+    zone.appendChild( select )
 }
 
 // Partially imitating the example here:
