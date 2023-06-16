@@ -2,7 +2,7 @@
 // Assumes you've already pulled in Quill from its CDN
 
 const Module = Quill.import( 'core/module' )
-import { GrouperBlot } from './grouper-blot.js'
+import { Grouper } from './grouper-blot.js'
 import { Group } from './group.js'
 
 const getToolbarGroup = quill => {
@@ -66,7 +66,7 @@ class Groupers extends Module {
             this.lastMousePos = [ event.clientX, event.clientY ] )
     }
 
-    allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
+    allGroupers () { return this.quill.scroll.descendants( Grouper ) }
     findAll ( predicate ) { // predicate maps grouper, index pair to bool
         return this.allGroupers().filter(
             g => predicate( g, this.quill.getIndex( g ) ) )

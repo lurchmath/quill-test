@@ -6,7 +6,7 @@ import { Group } from './group.js'
 
 // Partially imitating the example here:
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
-export class GrouperBlot extends Embed {
+export class Grouper extends Embed {
 
     static blotName = 'grouper'
     static tagName = 'span'
@@ -17,15 +17,15 @@ export class GrouperBlot extends Embed {
     static create ( value ) {
         const node = super.create( value )
         node.setAttribute( 'data-group-id', value.id )
-        if ( GrouperBlot.idToHtml ) { // so they can clear it out by assigning null
+        if ( Grouper.idToHtml ) { // so they can clear it out by assigning null
             const show = node.ownerDocument.createElement( 'span' )
             node.appendChild( show )
-            show.outerHTML = GrouperBlot.idToHtml( value.id )
+            show.outerHTML = Grouper.idToHtml( value.id )
         } // end of debugging stuff
         return node
     }
     static value ( element ) { return element.dataset }
-    data () { return GrouperBlot.value( this.domNode ) }
+    data () { return Grouper.value( this.domNode ) }
     
     constructor ( node, value ) {
         super( node, value )
@@ -34,7 +34,7 @@ export class GrouperBlot extends Embed {
 
     partner () {
         if ( !this._partner ) {
-            const result = this.scroll.descendants( GrouperBlot ).find( g => g.id == -this.id )
+            const result = this.scroll.descendants( Grouper ).find( g => g.id == -this.id )
             if ( result ) {
                 this._partner = result
                 result._partner = this
@@ -60,4 +60,4 @@ export class GrouperBlot extends Embed {
 
 }
 
-Quill.register( GrouperBlot )
+Quill.register( Grouper )
