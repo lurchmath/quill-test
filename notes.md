@@ -5,13 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 
- 1. Cache the result of `partner()` computations, in both groupers.  No need to
-    do this for open/close things, because they will run fast if partner is
-    cached.  Put all those methods near one another.
- 1. Move `grouperHTML()` into a static member of the `GrouperBlot` class, so
-    that it can be referenced from there anywhere, and replaced/customized, too.
-    This will replace the `debug` member, because you can just default to
-    making the static member null, which means don't use any HTML.
  1. Store my id during construction time so I don't have to look it up in a DOM
     node later.
  1. Remove `groupData()` since the only user of it is the Group itself, which

@@ -4,9 +4,6 @@
 const Embed = Quill.import( 'blots/embed' )
 import { Group } from './group.js'
 
-export const grouperHTML = id =>
-    `<span style="color:white; background:#00a6ed; padding:3px;">${id<0?'[':']'}<sub>${Math.abs(id)}</sub></span>`
-
 // Partially imitating the example here:
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 export class GrouperBlot extends Embed {
@@ -17,16 +14,17 @@ export class GrouperBlot extends Embed {
 
     static blotName = 'grouper'
     static tagName = 'span'
-    static debug = true // governs how groupers look; see create(), below
+    static idToHtml = id =>
+        `<span style="color:white; background:#00a6ed; padding:3px;">${id<0?'[':']'}<sub>${Math.abs(id)}</sub></span>`
 
     // value is of the form { id : integer } (-3 for left grouper, +3 for corresponding right grouper)
     static create ( value ) {
         const node = super.create( value )
         node.setAttribute( 'data-group-id', value.id )
-        if ( GrouperBlot.debug ) { // obviously this is for debugging/development only; turn this off later
+        if ( GrouperBlot.idToHtml ) { // so they can clear it out by assigning null
             const show = node.ownerDocument.createElement( 'span' )
             node.appendChild( show )
-            show.outerHTML = grouperHTML( value.id )
+            show.outerHTML = GrouperBlot.idToHtml( value.id )
         } // end of debugging stuff
         return node
     }

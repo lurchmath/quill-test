@@ -2,7 +2,7 @@
 // Assumes you've already pulled in Quill from its CDN
 
 const Module = Quill.import( 'core/module' )
-import { GrouperBlot, grouperHTML } from './grouper-blot.js'
+import { GrouperBlot } from './grouper-blot.js'
 import { Group } from './group.js'
 
 const getToolbarGroup = quill => {
