@@ -12,7 +12,7 @@ export class Group {
         this.open = grouper.getOpen()
         this.close = grouper.getClose()
         this.id = this.close.id
-        this.quill = this.open.quill
+        this.quill = Quill.find( this.open.scroll.domNode.parentNode )
         this.module = this.quill.getModule( 'groupers' )
     }
 

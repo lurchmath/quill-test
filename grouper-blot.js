@@ -30,13 +30,11 @@ export class GrouperBlot extends Embed {
     constructor ( node, value ) {
         super( node, value )
         this.id = value.id
-        this.quill = Quill.find( this.scroll.domNode.parentNode )
-        this.module = quill.getModule( 'groupers' )
     }    
 
     partner () {
         if ( !this._partner ) {
-            const result = this.module.find( g => g.id == -this.id )
+            const result = this.scroll.descendants( GrouperBlot ).find( g => g.id == -this.id )
             if ( result ) {
                 this._partner = result
                 result._partner = this
