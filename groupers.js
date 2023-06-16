@@ -5,15 +5,22 @@ const Module = Quill.import( 'core/module' )
 import { GrouperBlot, grouperHTML } from './grouper-blot.js'
 import { Group } from './group.js'
 
+const getToolbarGroup = quill => {
+    const toolbar = quill.getModule( 'toolbar' ).container
+    const found = toolbar.getElementsByClassName( 'groupers-tools' )
+    if ( found.length > 0 ) return found[0]
+    const result = toolbar.ownerDocument.createElement( 'span' )
+    result.classList.add( 'groupers-tools' )
+    result.classList.add( 'ql-formats' )
+    toolbar.appendChild( result )
+    return result
+}
 const addToolbarButton = ( quill, html, handler ) => {
     const toolbar = quill.getModule( 'toolbar' ).container
     const button = toolbar.ownerDocument.createElement( 'button' )
     button.innerHTML = html
-    const wrapper = toolbar.ownerDocument.createElement( 'span' )
-    wrapper.setAttribute( 'class', 'ql-formats' )
-    wrapper.appendChild( button )
-    toolbar.appendChild( wrapper )
     button.addEventListener( 'click', handler )
+    getToolbarGroup( quill ).appendChild( button )
 }
 
 // Partially imitating the example here:
@@ -24,10 +31,10 @@ class Groupers extends Module {
         super( quill, options )
         this.quill = quill
 
-        addToolbarButton( this.quill, `<nobr>${grouperHTML(-1)}${grouperHTML(1)}</nobr>`,
+        addToolbarButton( this.quill, `<nobr>&LeftDoubleBracket;...&RightDoubleBracket;</nobr>`,
             _ => this.wrapSelection() )
 
-        addToolbarButton( this.quill, 'Debug', _ => {
+        addToolbarButton( this.quill, '&#9072;', _ => {
             this.allGroups().forEach( ( g, i ) => {
                 console.log( `${i}. ${g}` )
                 console.log( `\t^  ${g.parent()}` )
