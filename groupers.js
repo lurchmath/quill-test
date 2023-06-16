@@ -5,10 +5,6 @@ const Module = Quill.import( 'core/module' )
 import { GrouperBlot, grouperHTML } from './grouper-blot.js'
 import { Group } from './group.js'
 
-// const debugBlot = blot => [
-//     `${blot.constructor.blotName} ${blot.text || ''} ${blot.constructor.value ? JSON.stringify(blot.constructor.value(blot.domNode)) : ''}`,
-//     ...( blot.children ? blot.children.map( debugBlot ) : [ ] )
-// ]
 const addToolbarButton = ( quill, html, handler ) => {
     const toolbar = quill.getModule( 'toolbar' ).container
     const button = toolbar.ownerDocument.createElement( 'button' )
@@ -49,11 +45,10 @@ class Groupers extends Module {
         //     console.log( source + ' applied this delta: ' + JSON.stringify( change, null, 2 ) )
         // } )
 
-        this.overlay = quill.getModule( 'overlay' )
-        this.overlay.draw = context => this.drawGroups( context )
-        this.lastMousePos = null
+        quill.getModule( 'overlay' ).draw = context => this.drawGroups( context )
+        this.lastMousePos = [ -1, -1 ]
         this.quill.container.addEventListener( 'mousemove', event =>
-            this.lastMousePos = event )
+            this.lastMousePos = [ event.clientX, event.clientY ] )
     }
 
     allGroupers () { return this.quill.scroll.descendants( GrouperBlot ) }
@@ -61,12 +56,29 @@ class Groupers extends Module {
         return this.allGroupers().filter(
             g => predicate( g, this.quill.getIndex( g ) ) )
     }
+    firstGrouperSatisfying ( predicate ) {
+        const all = this.allGroupers()
+        for ( let i = 0 ; i < all.length ; i++ )
+            if ( predicate( all[i], i ) ) return all[i]
+    }
+    lastGrouperSatisfying ( predicate ) {
+        const all = this.allGroupers()
+        let result = undefined
+        for ( let i = 0 ; i < all.length ; i++ )
+            if ( predicate( all[i], i ) ) result = all[i]
+        return result
+    }
 
     allGroups () {
         return this.groupersSatisfying( g => g.isOpen() ).map( g => new Group( g ) )
     }
 
-    pairWithId ( id ) { return this.allGroupers().filter( g => g.id() == id ) }
+    pairWithId ( id ) { return this.groupersSatisfying( g => g.id() == id ) }
+    groupWithId ( id ) {
+        const groupers = this.pairWithId( id )
+        if ( groupers.length > 0 )
+            return new Group( ...groupers )
+    }
 
     indicesOpenAt ( index ) {
         const result = [ ]
@@ -87,7 +99,7 @@ class Groupers extends Module {
         return possibleAnswer
     }
 
-    wrapSelection () {
+    wrapSelection ( source=Quill.sources.USER ) {
         const selection = this.quill.getSelection()
         if ( !selection ) return
         const start = selection.index
@@ -95,50 +107,42 @@ class Groupers extends Module {
         if ( `${this.indicesOpenAt(start)}` != `${this.indicesOpenAt(start+length)}` ) return
         const id = this.nextAvailableId()
         // More info on next two lines: https://quilljs.com/docs/api/#insertembed
-        this.quill.insertEmbed( start, 'grouper', { id : -id }, Quill.sources.USER )
-        this.quill.insertEmbed( start + 1 + length, 'grouper', { id : id }, Quill.sources.USER )
+        this.quill.insertEmbed( start, 'grouper', { id : -id }, source )
+        this.quill.insertEmbed( start + 1 + length, 'grouper', { id : id }, source )
         this.quill.setSelection( start + 1, length )
-    }
-
-    groupWithId ( id ) {
-        const groupers = this.pairWithId( id )
-        if ( groupers.length > 0 )
-            return new Group( ...groupers )
     }
 
     // what is the innermost group containing this index?
     // (i.e., the one for the most recent open grouper before this index)
-    groupAroundIndex ( index ) {
+    groupAround ( index ) {
         const openIndices = this.indicesOpenAt( index )
         if ( openIndices.length > 0 )
             return this.groupWithId( openIndices[openIndices.length - 1] )
     }
     // what is the outermost group before this index?
     // (i.e., the one for the most recent close grouper before this index)
-    groupBeforeIndex ( index ) {
-        const closes = this.groupersSatisfying(
+    groupBefore ( index ) {
+        const close = this.lastGrouperSatisfying(
             ( g, i ) => g.isClose() && i < index )
-        if ( closes.length > 0 )
-            return closes[closes.length - 1].group()
+        if ( close ) return close.group()
     }
     // what is the outermost group at or after this index?
     // (i.e., the one for the next open grouper at or after this index)
-    groupAtOrAfterIndex ( index ) {
-        const opens = this.groupersSatisfying(
+    groupAtOrAfter ( index ) {
+        const open = this.firstGrouperSatisfying(
             ( g, i ) => g.isOpen() && i >= index )
-        if ( opens.length > 0 )
-            return opens[0].group()
+        if ( open ) return open.group()
     }
 
     drawGroups ( context ) {
         const offset = this.quill.container.getBoundingClientRect()
-        const mouseX = this.lastMousePos ? this.lastMousePos.clientX - offset.left : -1
-        const mouseY = this.lastMousePos ? this.lastMousePos.clientY - offset.top : -1
+        const mouse = [ this.lastMousePos[0] - offset.left,
+                        this.lastMousePos[1] - offset.top ]
         const selection = this.quill.getSelection()
-        const innerGroup = selection ? this.groupAroundIndex( selection.index ) : null
+        const innerGroup = selection ? this.groupAround( selection.index ) : null
         this.allGroups().forEach( group => {
             const region = group.region()
-            if ( region.contains( mouseX, mouseY ) ) {
+            if ( region.contains( ...mouse ) ) {
                 region.drawCorners( context )
                 context.fillStyle = '#ff0000'
                 context.fill()

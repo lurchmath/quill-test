@@ -1,9 +1,4 @@
 
-// May eventually need these features of the Group class:
-//  - sequence of leaf blots inside the group
-//  - sequence of DOM elements inside the group
-
-
 import { Region } from './region.js'
 
 export class Group {
@@ -56,13 +51,13 @@ export class Group {
     }
 
     parent () {
-        return this.module.groupAroundIndex( this.indices().beforeOpen )
+        return this.module.groupAround( this.indices().beforeOpen )
     }
     previous () {
-        return this.module.groupBeforeIndex( this.indices().beforeOpen )
+        return this.module.groupBefore( this.indices().beforeOpen )
     }
     next () {
-        return this.module.groupAtOrAfterIndex( this.indices().afterClose )
+        return this.module.groupAtOrAfter( this.indices().afterClose )
     }
     contains ( other ) { // proper containment to arbitrary depth (antireflexive)
         const mine = this.indices()
@@ -71,7 +66,7 @@ export class Group {
             && mine.afterClose > theirs.beforeClose
     }
     firstChild () {
-        const group = this.module.groupAtOrAfterIndex( this.indices().afterOpen )
+        const group = this.module.groupAtOrAfter( this.indices().afterOpen )
         if ( group && this.contains( group ) )
             return group
     }

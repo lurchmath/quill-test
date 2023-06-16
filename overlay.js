@@ -1,9 +1,4 @@
 
-// Will eventually want this feature, maybe of this module, maybe of the
-// groupers module:
-//  - Pop up a tooltip for a highlighted group
-
-
 // Assumes you've already pulled in Quill from its CDN
 
 const Module = Quill.import( 'core/module' )
@@ -18,12 +13,14 @@ class Overlay extends Module {
         quill.container.parentNode.insertBefore(
             this.canvas, quill.container.nextSibling )
         this.canvas.style.position = 'absolute'
-        this.updateSize()
-        new ResizeObserver( () => this.updateSize() ).observe( quill.container )
-        quill.on( 'text-change', () => setTimeout( () => this.redraw(), 0 ) )
-        quill.on( 'selection-change', () => this.redraw() )
-        this.quill.container.addEventListener( 'mousemove', () => this.redraw() )
-        this.quill.scroll.domNode.addEventListener( 'scroll', () => this.redraw() )
+        const updateSize = () => this.updateSize()
+        const updatePict = () => this.redraw()
+        updateSize()
+        new ResizeObserver( updateSize ).observe( quill.container )
+        quill.on( 'text-change', () => setTimeout( updatePict, 0 ) )
+        quill.on( 'selection-change', updatePict )
+        this.quill.container.addEventListener( 'mousemove', updatePict )
+        this.quill.scroll.domNode.addEventListener( 'scroll', updatePict )
     }
 
     updateSize () {
