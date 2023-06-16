@@ -5,8 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GrouperBlot`
 
- 1. Replace the `quill()` function with just computing `.quill` directly in the
-    constructor.
  1. Add a method for changing its HTML representation.  This way you can make
     groups visible/invisible at runtime for debugging/feedback/etc.
  1. Rename this module and the class to just `Grouper` instead of `GrouperBlot`.

@@ -11,6 +11,8 @@ export class GrouperBlot extends Embed {
     constructor ( node, value ) {
         super( node, value )
         this.id = value.id
+        this.quill = Quill.find( this.scroll.domNode.parentNode )
+        this.module = quill.getModule( 'groupers' )
     }
 
     static blotName = 'grouper'
@@ -44,8 +46,7 @@ export class GrouperBlot extends Embed {
 
     partner () {
         if ( !this._partner ) {
-            const result = this.scroll.descendants( GrouperBlot ).find(
-                g => g.id == -this.id )
+            const result = this.module.find( g => g.id == -this.id )
             if ( result ) {
                 this._partner = result
                 result._partner = this
@@ -58,8 +59,6 @@ export class GrouperBlot extends Embed {
     getOpen () { return this.isOpen() ? this : this.partner() }
     getClose () { return this.isOpen() ? this.partner() : this }
     
-    get quill () { return Quill.find( this.scroll.domNode.parentNode ) }
-
     group () { return new Group( this ) }
 
 }
