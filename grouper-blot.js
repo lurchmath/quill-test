@@ -8,13 +8,6 @@ import { Group } from './group.js'
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-blot.ts#L9
 export class GrouperBlot extends Embed {
 
-    constructor ( node, value ) {
-        super( node, value )
-        this.id = value.id
-        this.quill = Quill.find( this.scroll.domNode.parentNode )
-        this.module = quill.getModule( 'groupers' )
-    }
-
     static blotName = 'grouper'
     static tagName = 'span'
     static idToHtml = id =>
@@ -32,17 +25,14 @@ export class GrouperBlot extends Embed {
         return node
     }
     static value ( element ) { return element.dataset }
-    length () { return 1 }
-
-    deleteAt ( index, length ) {
-        if ( this.beingDeleted ) return
-        this.beingDeleted = true
-        const partner = this.partner() // in case deleting this would mess up computing the partner...
-        super.deleteAt( index, length ) // ...we chose to do that first.
-        if ( partner ) partner.deleteAt( 0, 1 )
-    }
-
     data () { return GrouperBlot.value( this.domNode ) }
+    
+    constructor ( node, value ) {
+        super( node, value )
+        this.id = value.id
+        this.quill = Quill.find( this.scroll.domNode.parentNode )
+        this.module = quill.getModule( 'groupers' )
+    }    
 
     partner () {
         if ( !this._partner ) {
@@ -59,6 +49,15 @@ export class GrouperBlot extends Embed {
     getOpen () { return this.isOpen() ? this : this.partner() }
     getClose () { return this.isOpen() ? this.partner() : this }
     
+    length () { return 1 }
+    deleteAt ( index, length ) {
+        if ( this.beingDeleted ) return
+        this.beingDeleted = true
+        const partner = this.partner() // in case deleting this would mess up computing the partner...
+        super.deleteAt( index, length ) // ...we chose to do that first.
+        if ( partner ) partner.deleteAt( 0, 1 )
+    }
+
     group () { return new Group( this ) }
 
 }
