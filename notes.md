@@ -5,11 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `Group`
 
- 1. Add methods for getting the internals of a group:
-     * All leaf blots
-     * All DOM nodes
-     * HTML representation
-     * Plain text representation
  1. Document all methods.
 
 # `ScreenPoint`

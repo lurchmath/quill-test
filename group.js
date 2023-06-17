@@ -1,5 +1,6 @@
 
 import { Region } from './region.js'
+import { Grouper } from './grouper-blots.js'
 
 export class Group {
 
@@ -15,6 +16,37 @@ export class Group {
         this.quill = Quill.find( this.open.scroll.domNode.parentNode )
         this.module = this.quill.getModule( 'groupers' )
     }
+
+    blots ( groupers=true ) {
+        const result = [ ]
+        const stop = this.quill.getIndex( this.close )
+        let i = this.quill.getIndex( this.open ) + this.open.length()
+        while ( i < stop ) {
+            const blot = this.quill.getLeaf( i )[0]
+            if ( blot == this.open || blot == this.close
+              || ( result.length > 0 && blot == result[result.length-1] ) ) {
+                i++
+                continue
+            }
+            if ( groupers || !( blot instanceof Grouper ) ) result.push( blot )
+            i += Math.max( 1, blot.length() )
+        }
+        return result
+    }
+
+    nodes ( groupers=true ) {
+        return this.blots( groupers ).map( blot => blot.domNode )
+    }
+    textContent () {
+        return this.nodes( false ).map( n => n.textContent ).join( '' )
+    }
+    range () {
+        const result = new Range()
+        result.setStart( this.open.domNode, 1 )
+        result.setEnd( this.close.domNode, 0 )
+        return result
+    }
+    fragment () { return this.range().cloneContents() }
 
     get ( key ) { return this.close.dataset[key] }
     set ( key, value ) { return this.close.dataset[key] = value }
