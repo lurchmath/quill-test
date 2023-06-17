@@ -3,10 +3,6 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `Group`
-
- 1. Document all methods.
-
 # `ScreenPoint`
 
  1. Create a `ScreenPoint` class.
