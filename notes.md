@@ -3,17 +3,6 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `ScreenPoint`
-
- 1. Create a `ScreenPoint` class.
- 1. Constructor can take a mouse event and will extract `clientX`, `clientY`,
-    or it can just take those two values.
- 1. There's also a `set()` routine that can read from a mouse event.
- 1. There's a `makeRelativeTo()` routine that takes a DOM Node and finds that
-    node's bounding rect top left and adjusts the point to be relative to that
-    (just `x -= left` and `y -= top`).  It can also just accept a point.
- 1. Document all methods.
-
 # `ScreenRect`
 
  1. Create a `ScreenRect` class.
