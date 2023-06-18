@@ -16,11 +16,6 @@ import { Grouper } from './grouper-blots.js'
  */
 export class Group {
 
-    // Constructor requires a grouper because it is not possible to make
-    // it more flexible than that; it needs to know which editor we're talking
-    // about so it can use the appropriate Quill instance for that editor.
-    // Thus it is necessary to give it at least that much information; so we
-    // move the convenience constructors into the GroupersModule instead.
     /**
      * The constructor requires one of the two groupers that define the group,
      * because it must have some way to get access to the Quill editor instance
@@ -327,5 +322,21 @@ export class Group {
      * @returns {String} a simple string representation of this group
      */
     toString () { return `Group(id=${this.id},${JSON.stringify(this.indices())})` }
+
+    /**
+     * Similar in purpose to `toString()`, but much more verbose (multi-line).
+     * 
+     * @returns {String} a verbose string representation of this group and its
+     *   relationships to parent, sibling, and child groups
+     */
+    debug () {
+        return `${this}`
+             + `\n\t^  ${this.parent()}`
+             + `\n\t<  ${this.previous()}`
+             + `\n\t>  ${this.next()}`
+             + `\n\tv  ${this.firstChild()}`
+             + `\n\tvv ${this.children()}`
+             + `\n\t[] ${this.region()}`
+    }
 
 }

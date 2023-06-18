@@ -5,10 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `GroupersModule`
 
- 1. Move all debugging routines and the `addToolbarButton` routine to a
-    `quill-dev-tools.js` file that always takes quill instances as its first
-    argument.  This includes the function currently attached to the Debug button
-    as well as the handler formerly attached to the text-change event.
  1. Update `drawGroups()` to use `ScreenPoint`.
  1. Document all methods.
 
