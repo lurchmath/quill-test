@@ -33,7 +33,7 @@ const addToolbarMenu = ( quill, list, handler ) => {
 
 // Partially imitating the example here:
 // https://github.com/jspaine/quill-placeholder-module/blob/master/src/placeholder-module.ts#L22
-class Groupers extends Module {
+class GroupersModule extends Module {
 
     constructor ( quill, options ) {
         super( quill, options )
@@ -170,4 +170,4 @@ class Groupers extends Module {
 
 }
 
-Quill.register( 'modules/groupers', Groupers )
+Quill.register( 'modules/groupers', GroupersModule )

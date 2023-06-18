@@ -3,9 +3,8 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `Groupers`
+# `GroupersModule`
 
- 1. Rename to `GroupersModule` class in `groupers-module.js`.
  1. Move all debugging routines and the `addToolbarButton` routine to a
     `quill-dev-tools.js` file that always takes quill instances as its first
     argument.  This includes the function currently attached to the Debug button

@@ -20,7 +20,7 @@ export class Group {
     // it more flexible than that; it needs to know which editor we're talking
     // about so it can use the appropriate Quill instance for that editor.
     // Thus it is necessary to give it at least that much information; so we
-    // move the convenience constructors into the Groupers module instead.
+    // move the convenience constructors into the GroupersModule instead.
     /**
      * The constructor requires one of the two groupers that define the group,
      * because it must have some way to get access to the Quill editor instance
@@ -28,9 +28,9 @@ export class Group {
      * 
      * This constructor stores both the open and close groupers (regardless of
      * which of the two it is provided as its argument), the group ID, the Quill
-     * instance for the editor containing those groupers, and the Groupers
-     * module of that editor, so that all of those objects are available later
-     * when any methods in this instance are called.
+     * instance for the editor containing those groupers, and the GroupersModule
+     * of that editor, so that all of those objects are available later when any
+     * methods in this instance are called.
      * 
      * @param {Grouper} grouper - either the open or close grouper from the pair
      *   that defines the group
