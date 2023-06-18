@@ -34,6 +34,8 @@ export class ScreenPoint {
         } else if ( args.length == 1 ) { // assume mouse event
             this.x = args[0].clientX
             this.y = args[0].clientY
+        } else {
+            throw new Error( 'Invalid number of arguments to set()' )
         }
     }
 

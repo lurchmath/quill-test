@@ -3,21 +3,6 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `ScreenRect`
-
- 1. Create a `ScreenRect` class.
- 1. Constructor can take a DOM Node and will construct it from its
-    `getBoundingClientRect()` instead.  Or you can pass `L,T,R,B`.
-    Internally, it's two `ScreenPoint` instances.
- 1. Optional second parameter to the constructor says to take padding into
-    account, so you get a rect that's smaller than the bounding client rect.
- 1. There's also a `set()` routine that can read from a mouse event.
- 1. There's a `makeRelativeTo()` routine that just applies it to its internal
-    screen points.
- 1. Add a membership test for `ScreenPoint` instances.
- 1. Add a clamping function for `ScreenPoint` instances.
- 1. Document all methods.
-
 # `Groupers`
 
  1. Rename to `GroupersModule` class in `groupers-module.js`.
