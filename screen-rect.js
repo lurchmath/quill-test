@@ -56,6 +56,48 @@ export class ScreenRect {
     }
 
     /**
+     * Getter for the top of the rectangle (a y coordinate)
+     * 
+     * @returns {integer} y value of the top of the rectangle
+     */
+    get top () { return this.topLeft.y }
+
+    /**
+     * Getter for the bottom of the rectangle (a y coordinate)
+     * 
+     * @returns {integer} y value of the bottom of the rectangle
+     */
+    get bottom () { return this.bottomRight.y }
+
+    /**
+     * Getter for the left of the rectangle (an x coordinate)
+     * 
+     * @returns {integer} x value of the left of the rectangle
+     */
+    get left () { return this.topLeft.x }
+
+    /**
+     * Getter for the right of the rectangle (an x coordinate)
+     * 
+     * @returns {integer} x value of the right of the rectangle
+     */
+    get right () { return this.bottomRight.x }
+
+    /**
+     * Width of the rectangle in pixels
+     * 
+     * @returns {integer} the width of the rectangle
+     */
+    width () { return this.bottomRight.x - this.topLeft.x }
+
+    /**
+     * Height of the rectangle in pixels
+     * 
+     * @returns {integer} the height of the rectangle
+     */
+    height () { return this.bottomRight.y - this.topLeft.y }
+
+    /**
      * See the documentation for `relativeTo()` in the `ScreenPoint` class.
      * A rectangle is simply two corner points, the top left and the bottom
      * right.  This function merely calls `relativeTo()` in its two corners,
