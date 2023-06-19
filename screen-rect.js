@@ -56,17 +56,23 @@ export class ScreenRect {
     }
 
     /**
-     * See the documentation for `makeRelativeTo()` in the `ScreenPoint` class.
+     * See the documentation for `relativeTo()` in the `ScreenPoint` class.
      * A rectangle is simply two corner points, the top left and the bottom
-     * right.  This function merely calls `makeRelativeTo()` in its two corners,
-     * passing the arguments along.
+     * right.  This function merely calls `relativeTo()` in its two corners,
+     * passing the arguments along, and returning the rectangle defined by the
+     * two results.
      * 
-     * @param  {...any} args - passed directly to `makeRelativeTo()` for each
+     * @param  {...any} args - passed directly to `relativeTo()` for each
      *   corner point; see above
+     * @returns {ScreenRect} the new rectangle built by the subtraction
+     *   described above, as a new screen rectangle (not the same instance as
+     *   this one)
      */
-    makeRelativeTo ( ...args ) {
-        this.topLeft.makeRelativeTo( ...args )
-        this.bottomRight.makeRelativeTo( ...args )
+    relativeTo ( ...args ) {
+        return new ScreenRect(
+            this.topLeft.relativeTo( ...args ),
+            this.bottomRight.relativeTo( ...args )
+        )
     }
 
     /**

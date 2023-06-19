@@ -48,24 +48,25 @@ export class ScreenPoint {
      * 
      * If you provide a ScreenPoint as argument, that point will be treated as
      * the top left corner (in viewport coordinates) of the element in which
-     * you'll be measuring points.  This point will subtracting that other point
-     * from its internal coordinates, so that it becomes now relative to the top
-     * left corner of that element.
+     * you'll be measuring points.  This point will subtract that other point
+     * from its internal coordinates, returning a result that has the same
+     * meaning as this point, except measured relative to the top left corner of
+     * that element.
      * 
      * If you provide an HTMLElement as argument, its top left corner (in
      * viewport coordinates) is computed, and then we proceed as above.
      * 
      * @param {any} arg - either a ScreenPoint or HTMLElement, as described
      *   above
+     * @returns {ScreenPoint} the result of the subtraction described above, as
+     *   a new screen point (not the same instance as this one)
      */
-    makeRelativeTo ( arg ) {
+    relativeTo ( arg ) {
         if ( arg instanceof ScreenPoint ) {
-            this.x -= arg.x
-            this.y -= arg.y
+            return new ScreenPoint( this.x - arg.x, this.y - arg.y )
         } else if ( arg instanceof HTMLElement ) {
             const rect = arg.getBoundingClientRect()
-            this.x -= rect.left
-            this.y -= rect.top
+            return new ScreenPoint( this.x - rect.x, this.y - rect.y )
         } else {
             throw new Error( `Not a ScreenPoint or HTMLElement: ${arg}` )
         }

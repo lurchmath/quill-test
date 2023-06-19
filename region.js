@@ -110,15 +110,19 @@ export class Region {
 
     // x and y are given relative to the top left corner of the canvas
     // (which is the same thing as the top left corner of the ql-container)
-    contains ( x, y ) {
+    contains ( screenPoint ) {
         if ( this.isRect ) {
-            return pointInRect( x, y, this.left, this.top, this.right, this.bottom )
+            return pointInRect( screenPoint.x, screenPoint.y,
+                this.left, this.top, this.right, this.bottom )
         } else {
             const min = this.minLeft()
             const max = this.maxRight()
-            return pointInRect( x, y, min, this.top, max, this.bottom )
-                && !pointInRect( x, y, min, this.top, this.left-1, this.innerTop-1 )
-                && !pointInRect( x, y, this.right+1, this.innerBottom+1, max, this.bottom )
+            return pointInRect( screenPoint.x, screenPoint.y,
+                    min, this.top, max, this.bottom )
+                && !pointInRect( screenPoint.x, screenPoint.y,
+                    min, this.top, this.left-1, this.innerTop-1 )
+                && !pointInRect( screenPoint.x, screenPoint.y,
+                    this.right+1, this.innerBottom+1, max, this.bottom )
         }
     }
 
