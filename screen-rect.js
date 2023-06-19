@@ -36,7 +36,7 @@ export class ScreenRect {
      *   described above
      */
     set ( ...args ) {
-        if ( args.length == 1 || args.length == 2 ) { // assume HTMLElement instance
+        if ( args[0] instanceof HTMLElement ) {
             const rect = args[0].getBoundingClientRect()
             if ( args[1] ) { // did they ask us to use padding?
                 const styles = args[0].computedStyleMap()
@@ -47,11 +47,14 @@ export class ScreenRect {
             }
             this.topLeft = new ScreenPoint( rect.left, rect.top )
             this.bottomRight = new ScreenPoint( rect.right, rect.bottom )
+        } else if ( args[0] instanceof ScreenPoint ) {
+            this.topLeft = args[0]
+            this.bottomRight = args[1]
         } else if ( args.length == 4 ) { // assume L,T,R,B quadruple
             this.topLeft = new ScreenPoint( args[0], args[1] )
             this.bottomRight = new ScreenPoint( args[2], args[3] )
         } else {
-            throw new Error( 'Invalid number of arguments to set()' )
+            throw new Error( 'Invalid arguments to set()' )
         }
     }
 

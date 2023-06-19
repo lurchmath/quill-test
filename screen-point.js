@@ -1,4 +1,6 @@
 
+import { ScreenRect } from './screen-rect.js'
+
 /**
  * A ScreenPoint instance represents a point on the user's screen.  We use this
  * to make it easy to extract (x,y) coordinate pairs from relevant data, and
@@ -64,6 +66,8 @@ export class ScreenPoint {
     relativeTo ( arg ) {
         if ( arg instanceof ScreenPoint ) {
             return new ScreenPoint( this.x - arg.x, this.y - arg.y )
+        } else if ( arg instanceof ScreenRect ) {
+            return this.relativeTo( arg.topLeft )
         } else if ( arg instanceof HTMLElement ) {
             const rect = arg.getBoundingClientRect()
             return new ScreenPoint( this.x - rect.x, this.y - rect.y )
