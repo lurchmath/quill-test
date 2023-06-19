@@ -13,6 +13,7 @@ class OverlayModule extends Module {
         quill.container.parentNode.insertBefore(
             this.canvas, quill.container.nextSibling )
         this.canvas.style.position = 'absolute'
+        this.eventTarget = new EventTarget()
         const updateSize = () => this.updateSize()
         const updatePict = () => this.redraw()
         updateSize()
@@ -21,6 +22,14 @@ class OverlayModule extends Module {
         quill.on( 'selection-change', updatePict )
         this.quill.container.addEventListener( 'mousemove', updatePict )
         this.quill.scroll.domNode.addEventListener( 'scroll', updatePict )
+    }
+
+    addEventListener ( ...args ) {
+        this.eventTarget.addEventListener( ...args )
+    }
+
+    removeEventListener ( ...args ) {
+        this.eventTarget.removeEventListener( ...args )
     }
 
     updateSize () {
@@ -34,15 +43,12 @@ class OverlayModule extends Module {
     }
 
     redraw () {
-        const context = this.canvas.getContext( '2d' )
-        context.clearRect( 0, 0, this.canvas.width, this.canvas.height )
-        this.draw( context )
+        const drawEvent = new Event( 'draw' )
+        drawEvent.context = this.canvas.getContext( '2d' )
+        drawEvent.context.clearRect( 0, 0, this.canvas.width, this.canvas.height )
+        this.eventTarget.dispatchEvent( drawEvent )
     }
     
-    draw ( context ) {
-        // pure virtual function; replace with desired behavior
-    }
-
 }
 
 Quill.register( 'modules/overlay', OverlayModule )

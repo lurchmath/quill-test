@@ -34,17 +34,16 @@ class GroupsModule extends Module {
         // install relevant toolbar buttons
         addToolbarButton( this.quill, `<nobr>&LeftDoubleBracket;...&RightDoubleBracket;</nobr>`,
             _ => this.wrapSelection() )
-        addToolbarButton( this.quill, '&#9072;', _ => {
+        addToolbarButton( this.quill, '&#9072;', _ =>
             this.allGroups().forEach(
-                ( g, i ) => console.log( `${i}. ${g.debug()}` ) )
-        } )
+                ( g, i ) => console.log( `${i}. ${g.debug()}` ) ) )
 
         // if the overlay module is present (which it ought to be) then tell it
         // to call our `drawGroups()` method to draw group outlines on itself
         const overlayModule = quill.getModule( 'overlay' )
-        if ( overlayModule ) {
-            overlayModule.draw = context => this.drawGroups( context )
-        }
+        if ( overlayModule )
+            overlayModule.addEventListener( 'draw',
+                event => this.drawGroups( event.context ) )
 
         // track mouse position over the editor so that we can do `drawGroups()`
         // in such a way that we react to mouse hovers
