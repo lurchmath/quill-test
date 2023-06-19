@@ -3,15 +3,25 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `Overlay`
-
- 1. Add a feature for drawing a tooltip for a group.  It should accept arbitrary
-    HTML, create a DIV for it, position it on top of itself, and draw a box
-    around it with a little `^` or `v` pointing to the group.
-
 # New development
 
- 1. Add a module that uses overlay's tooltips for editing read-only, inline,
+ 1. Create a tooltip class with the following features.
+     * At construction time, you give it the element over which it will float.
+     * It constructs a DIV and lets you fill it with whatever HTML you want.
+     * This may include input widgets, which should be interactive.
+     * At any time, you can ask it to position itself relative to a certain
+       point, above/below/left/right of that point.
+     * It has built-in support for adding arrows in any of the 8 corners to
+       point to things in the element below, so it looks like a tooltip.  It
+       should also have border features.
+     * At any time, you can ask it to go away.
+     * You can tell it which descendant of the float-over element it's supposed
+       to be the tooltip for, and it will seek to always reposition itself
+       strategically above/below/near that element, whenever changes happen.
+       You can specify a preferred location (e.g., preferred above, f.ex.) for
+       when many options exist.
+ 1. Use the tooltip class to make it possible to put a tooltip on a group.
+ 1. Create a new Quill module that uses tooltips for editing read-only, inline,
     atomic embeds.  Try to imitate Notion's very nice feature set.  General
     idea:
      * Provide a function that converts an embed into the UI for editing it,
