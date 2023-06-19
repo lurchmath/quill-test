@@ -72,4 +72,11 @@ export class ScreenPoint {
         }
     }
 
+    /**
+     * Simple string representation for debugging: (x,y)
+     * 
+     * @returns {String} a string representation of this point
+     */
+    toString () { return `(${this.x},${this.y})` }
+
 }

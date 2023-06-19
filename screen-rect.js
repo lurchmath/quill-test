@@ -101,4 +101,11 @@ export class ScreenRect {
         )
     }
 
+    /**
+     * Simple string representation for debugging: [(x1,y1),(x2,y2)]
+     * 
+     * @returns {String} a string representation of this rectangle
+     */
+    toString () { return `[${this.topLeft},${this.bottomRight}]` }
+
 }
