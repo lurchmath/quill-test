@@ -314,7 +314,7 @@ export class Group {
      */
     region () {
         return new Region( this.open.domNode, this.close.domNode,
-            this.quill.editor.scroll.domNode.parentNode )
+            this.quill.editor.scroll.domNode )
     }
 
     /**
