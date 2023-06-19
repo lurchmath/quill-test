@@ -3,7 +3,7 @@
 
 const Module = Quill.import( 'core/module' )
 
-class Overlay extends Module {
+class OverlayModule extends Module {
 
     constructor ( quill, options ) {
         super( quill, options )
@@ -45,4 +45,4 @@ class Overlay extends Module {
 
 }
 
-Quill.register( 'modules/overlay', Overlay )
+Quill.register( 'modules/overlay', OverlayModule )

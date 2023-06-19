@@ -5,13 +5,12 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `Overlay`
 
- 1. Rename to `OverlayModule` class and `overlay-module.js`.
  1. Upgrade the draw method to not just be something you can override, but an
     event emitter to which you can attach handlers.
+ 1. Document all methods.
  1. Add a feature for drawing a tooltip for a group.  It should accept arbitrary
     HTML, create a DIV for it, position it on top of itself, and draw a box
     around it with a little `^` or `v` pointing to the group.
- 1. Document all methods.
 
 # New development
 
