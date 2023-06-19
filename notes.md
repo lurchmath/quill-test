@@ -5,19 +5,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
 # `Region`
 
- 1. Update constructor to take three rectangles as input:
-     * bounding rect for start node
-     * bounding rect for end node
-     * bounding rect for whole editor, minus padding, for clamping purposes
-    Store data internally as 1 or 3 rectangles:
-     * If the thing is a rect, then it's 1 rect internally.
-     * If the thing is a non-rect region, then it's 3 rects internally, one big
-       one that's the region's bounding box, and two smaller ones that can be
-       boolean subtracted from the first to yield the region's shape.
- 1. Update the `contains()` method to take advantage of these new internals.
- 1. Update `drawPath()` method to reference the appropriate coordinates.
- 1. Rework all class internals to avoid `minLeft()` and `maxRight()` methods.
-    Those methods can then be removed.
  1. Document all methods.
 
 # `Overlay`

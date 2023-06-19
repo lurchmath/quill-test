@@ -312,7 +312,10 @@ export class Group {
      * 
      * @returns {Region} the region on screen this group fills
      */
-    region () { return new Region( this.open.domNode, this.close.domNode ) }
+    region () {
+        return new Region( this.open.domNode, this.close.domNode,
+            this.quill.editor.scroll.domNode.parentNode )
+    }
 
     /**
      * When debugging, it's useful to be able to print out a group object with
