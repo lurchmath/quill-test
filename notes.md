@@ -3,10 +3,6 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
-# `Region`
-
- 1. Document all methods.
-
 # `Overlay`
 
  1. Rename to `OverlayModule` class and `overlay-module.js`.
