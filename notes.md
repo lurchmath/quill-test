@@ -3,8 +3,19 @@
 
 Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
 
+# Cleanup
+
+ 1. Make the groups module not show buttons on the toolbar by default, but you
+    have to request them with the options you provide to the module at
+    installation time.
+
 # New development
 
+ 1. Is it possible to draw Regions in such a way that a region spanning only two
+    lines looks like two disjoint rects, rather than one big octagon?  Consider
+    the situation when the end of one line begins a group with just one word,
+    which then wraps onto the next line, for just one word.  The octagon looks
+    very bad in such a case, and two rects would be better.
  1. Create a tooltip class with the following features.
      * At construction time, you give it the element over which it will float.
      * It constructs a DIV and lets you fill it with whatever HTML you want.
@@ -49,3 +60,6 @@ Later we will need a nice UI with menus, submenus, keyboard shortcuts, etc.
    subtle UI that VS Code Markdown Preview users (thick grey line, left gutter).
  * We are agreed that groupers should be invisible by default, but that later
    each group should be able to customize how its groupers appear.
+ * We may want read-only paragraphs inside a Lurch document, such as a preamble
+   that shows things like the guessed instantiations of theorems, the loaded
+   libraries, etc.  So investigate how easy/hard that is to do with Quill.
